@@ -1,0 +1,400 @@
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+// Dummy data for the gig page
+const gig = {
+  id: 1,
+  title: 'Desain logo minimalis untuk brand kamu',
+  slug: 'desain-logo-minimalis',
+  description: 'Saya akan mendesain logo minimalis yang sesuai dengan brand kamu. Logo akan dibuat dengan konsep modern dan clean design yang cocok untuk berbagai kebutuhan bisnis.',
+  images: [
+    '/images/gig-1.jpg',
+    '/images/gig-detail-1.jpg',
+    '/images/gig-detail-2.jpg',
+    '/images/gig-detail-3.jpg',
+  ],
+  seller: {
+    id: 1,
+    name: 'Andi Designer',
+    username: 'andidesigner',
+    avatar: '/images/avatar-1.jpg',
+    level: 2,
+    rating: 4.9,
+    reviewCount: 124,
+    responseTime: '1 jam',
+    memberSince: 'Januari 2023',
+    description: 'Graphic designer dengan pengalaman 3 tahun di bidang branding dan logo design.',
+    languages: ['Indonesia', 'English'],
+    skills: ['Logo Design', 'Brand Identity', 'UI/UX', 'Illustration'],
+  },
+  category: 'Design',
+  subcategory: 'Logo Design',
+  tags: ['logo', 'minimalist', 'branding', 'modern'],
+  packages: [
+    {
+      id: 1,
+      name: 'Basic',
+      description: 'Logo dalam format PNG',
+      price: 50000,
+      deliveryTime: 2,
+      revisionCount: 1,
+      features: ['1 konsep', 'Format PNG', 'Resolusi tinggi'],
+    },
+    {
+      id: 2,
+      name: 'Standard',
+      description: 'Logo dalam format PNG dan AI',
+      price: 100000,
+      deliveryTime: 2,
+      revisionCount: 2,
+      features: ['2 konsep', 'Format PNG dan AI', 'Resolusi tinggi', 'Source file'],
+    },
+    {
+      id: 3,
+      name: 'Premium',
+      description: 'Logo dalam semua format + Brand Guide',
+      price: 150000,
+      deliveryTime: 3,
+      revisionCount: 3,
+      features: ['3 konsep', 'Semua format', 'Resolusi tinggi', 'Source file', 'Brand guide', 'Social media kit'],
+    },
+  ],
+  reviews: [
+    {
+      id: 1,
+      user: {
+        name: 'Budi',
+        avatar: '/images/review-avatar-1.jpg',
+      },
+      rating: 5,
+      date: '2 minggu yang lalu',
+      comment: 'Keren banget hasilnya! Sesuai dengan ekspektasi dan revisi cepat. Recommended seller!',
+    },
+    {
+      id: 2,
+      user: {
+        name: 'Citra',
+        avatar: '/images/review-avatar-2.jpg',
+      },
+      rating: 4,
+      date: '1 bulan yang lalu',
+      comment: 'Bagus hasilnya, tapi agak lama responnya. Overall puas dengan hasil akhirnya.',
+    },
+  ],
+  faq: [
+    {
+      question: 'Berapa lama proses pengerjaan logo?',
+      answer: 'Tergantung paket yang dipilih, biasanya 1-3 hari kerja sejak brief diterima.',
+    },
+    {
+      question: 'Apakah saya mendapatkan file source?',
+      answer: 'Untuk paket Standard dan Premium, Anda akan mendapatkan file source (AI/PSD).',
+    },
+    {
+      question: 'Berapa kali revisi yang bisa dilakukan?',
+      answer: 'Tergantung paket: Basic (1x), Standard (2x), Premium (3x).',
+    },
+  ],
+};
+
+export default function GigPage({ params }: { params: { slug: string } }) {
+  const [selectedPackage, setSelectedPackage] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(0);
+  
+  return (
+    <div className="bg-gray-50 min-h-screen pb-16">
+      {/* Hero Section with Main Image */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Left - Main Image */}
+            <div className="lg:w-7/12">
+              <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-lg">
+                <Image
+                  src={gig.images[selectedImage]}
+                  alt={`${gig.title} - Image ${selectedImage + 1}`}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              <div className="grid grid-cols-4 gap-3 mt-4">
+                {gig.images.map((image, index) => (
+                  <div 
+                    key={index}
+                    className={`relative h-24 rounded-lg overflow-hidden cursor-pointer transition-all ${selectedImage === index ? 'ring-2 ring-indigo-600 shadow-md' : 'hover:opacity-80'}`}
+                    onClick={() => setSelectedImage(index)}
+                  >
+                    <Image
+                      src={image}
+                      alt={`Thumbnail ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Right - Quick Info */}
+            <div className="lg:w-5/12">
+              <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                <h1 className="text-2xl md:text-3xl font-bold mb-4">{gig.title}</h1>
+                
+                <div className="flex items-center mb-6">
+                  <div className="relative h-12 w-12 rounded-full overflow-hidden mr-3 ring-2 ring-gray-100">
+                    <Image
+                      src={gig.seller.avatar}
+                      alt={gig.seller.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <Link href={`/user/${gig.seller.username}`} className="font-medium hover:text-indigo-600">
+                      {gig.seller.name}
+                    </Link>
+                    <div className="flex items-center text-sm text-yellow-500">
+                      ★ {gig.seller.rating} <span className="text-gray-500 ml-1">({gig.seller.reviewCount})</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+                  <div className="flex items-center">
+                    <div className="text-gray-500 mr-4">
+                      <svg className="h-5 w-5 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {gig.packages[selectedPackage-1].deliveryTime} hari
+                    </div>
+                    <div className="text-gray-500">
+                      <svg className="h-5 w-5 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      {gig.packages[selectedPackage-1].revisionCount}x revisi
+                    </div>
+                  </div>
+                  <div className="text-indigo-600 font-bold text-xl">
+                    Rp {gig.packages[selectedPackage-1].price.toLocaleString()}
+                  </div>
+                </div>
+                
+                <p className="text-gray-700 mb-6">
+                  {gig.description.substring(0, 150)}...
+                </p>
+                
+                <button className="w-full bg-indigo-600 text-white py-3 rounded-md font-medium hover:bg-indigo-700 transition-colors mb-4">
+                  Pesan Sekarang
+                </button>
+                
+                <button className="w-full border border-gray-300 text-gray-700 py-3 rounded-md font-medium hover:bg-gray-50 transition-colors">
+                  Hubungi Penjual
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Gig Details */}
+          <div className="lg:col-span-2">
+            {/* Gig Content Tabs */}
+            <Tabs defaultValue="description" className="mb-8">
+              <TabsList className="grid grid-cols-4 mb-4">
+                <TabsTrigger value="description">Deskripsi</TabsTrigger>
+                <TabsTrigger value="reviews">Ulasan ({gig.reviews.length})</TabsTrigger>
+                <TabsTrigger value="seller">Tentang Seller</TabsTrigger>
+                <TabsTrigger value="faq">FAQ</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="description" className="p-4 bg-white rounded-md shadow-sm">
+                <h3 className="text-lg font-medium mb-2">Deskripsi Gig</h3>
+                <p className="text-gray-700 mb-4">{gig.description}</p>
+                
+                <h4 className="font-medium mb-2">Tags</h4>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {gig.tags.map((tag, index) => (
+                    <span key={index} className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="reviews" className="p-4 bg-white rounded-md shadow-sm">
+                <h3 className="text-lg font-medium mb-4">Ulasan ({gig.reviews.length})</h3>
+                <div className="space-y-4">
+                  {gig.reviews.map((review) => (
+                    <div key={review.id} className="border-b pb-4">
+                      <div className="flex items-center mb-2">
+                        <div className="relative h-8 w-8 rounded-full overflow-hidden mr-2">
+                          <Image
+                            src={review.user.avatar}
+                            alt={review.user.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div>
+                          <div className="font-medium">{review.user.name}</div>
+                          <div className="flex items-center">
+                            <div className="text-yellow-500">
+                              {'★'.repeat(review.rating)}
+                              {'☆'.repeat(5 - review.rating)}
+                            </div>
+                            <span className="text-gray-500 text-sm ml-2">{review.date}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-gray-700">{review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="seller" className="p-4 bg-white rounded-md shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="relative h-16 w-16 rounded-full overflow-hidden mr-4">
+                    <Image
+                      src={gig.seller.avatar}
+                      alt={gig.seller.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium">{gig.seller.name}</h3>
+                    <p className="text-gray-500">Level {gig.seller.level} Seller</p>
+                    <div className="flex items-center text-yellow-500">
+                      ★ {gig.seller.rating} <span className="text-gray-500 ml-1">({gig.seller.reviewCount} ulasan)</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <p className="text-sm text-gray-500">Waktu Respons</p>
+                    <p className="font-medium">{gig.seller.responseTime}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Member Sejak</p>
+                    <p className="font-medium">{gig.seller.memberSince}</p>
+                  </div>
+                </div>
+                
+                <p className="text-gray-700 mb-4">{gig.seller.description}</p>
+                
+                <div className="mb-4">
+                  <h4 className="font-medium mb-2">Bahasa</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {gig.seller.languages.map((language, index) => (
+                      <span key={index} className="bg-gray-100 text-gray-800 text-sm px-2 py-1 rounded">
+                        {language}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium mb-2">Skills</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {gig.seller.skills.map((skill, index) => (
+                      <span key={index} className="bg-gray-100 text-gray-800 text-sm px-2 py-1 rounded">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="faq" className="p-4 bg-white rounded-md shadow-sm">
+                <h3 className="text-lg font-medium mb-4">Pertanyaan yang Sering Diajukan</h3>
+                <div className="space-y-4">
+                  {gig.faq.map((item, index) => (
+                    <div key={index} className="border-b pb-4">
+                      <h4 className="font-medium mb-1">{item.question}</h4>
+                      <p className="text-gray-700">{item.answer}</p>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+          
+          {/* Right Column - Packages */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                <div className="border-b">
+                  <div className="flex">
+                    {gig.packages.map((pkg) => (
+                      <button
+                        key={pkg.id}
+                        className={`flex-1 py-3 text-center font-medium ${selectedPackage === pkg.id ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-500 hover:text-indigo-600'}`}
+                        onClick={() => setSelectedPackage(pkg.id)}
+                      >
+                        {pkg.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Selected Package Details */}
+                {gig.packages.map((pkg) => (
+                  <div key={pkg.id} className={`p-6 ${selectedPackage === pkg.id ? 'block' : 'hidden'}`}>
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-medium">{pkg.name}</h3>
+                      <p className="text-xl font-bold">Rp {pkg.price.toLocaleString()}</p>
+                    </div>
+                    
+                    <p className="text-gray-700 mb-4">{pkg.description}</p>
+                    
+                    <div className="flex justify-between text-sm text-gray-500 mb-4">
+                      <div>Waktu Pengerjaan</div>
+                      <div className="font-medium">{pkg.deliveryTime} hari</div>
+                    </div>
+                    
+                    <div className="flex justify-between text-sm text-gray-500 mb-6">
+                      <div>Revisi</div>
+                      <div className="font-medium">{pkg.revisionCount}x</div>
+                    </div>
+                    
+                    <h4 className="font-medium mb-2">Yang Kamu Dapatkan:</h4>
+                    <ul className="space-y-2 mb-6">
+                      {pkg.features.map((feature, index) => (
+                        <li key={index} className="flex items-center text-sm">
+                          <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <button className="w-full bg-indigo-600 text-white py-3 rounded-md font-medium hover:bg-indigo-700 transition-colors">
+                      Lanjutkan (Rp {pkg.price.toLocaleString()})
+                    </button>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-4 text-center">
+                <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                  Hubungi Penjual
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
