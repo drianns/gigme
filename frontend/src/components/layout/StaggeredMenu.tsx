@@ -54,9 +54,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 }) => {
     const [open, setOpen] = useState(false);
     const openRef = useRef(false);
-    const panelRef = useRef(null);
-    const preLayersRef = useRef(null);
-    const preLayerElsRef = useRef([]);
+    const panelRef = useRef<any>(null);
+    const preLayersRef = useRef<any>(null);
+    const preLayerElsRef = useRef<any[]>([]);
     const plusHRef = useRef(null);
     const plusVRef = useRef(null);
     const iconRef = useRef(null);
@@ -64,14 +64,14 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     const textWrapRef = useRef(null);
     const [textLines, setTextLines] = useState(['Menu', 'Close']);
 
-    const openTlRef = useRef(null);
-    const closeTweenRef = useRef(null);
-    const spinTweenRef = useRef(null);
-    const textCycleAnimRef = useRef(null);
-    const colorTweenRef = useRef(null);
-    const toggleBtnRef = useRef(null);
+    const openTlRef = useRef<any>(null);
+    const closeTweenRef = useRef<any>(null);
+    const spinTweenRef = useRef<any>(null);
+    const textCycleAnimRef = useRef<any>(null);
+    const colorTweenRef = useRef<any>(null);
+    const toggleBtnRef = useRef<any>(null);
     const busyRef = useRef(false);
-    const itemEntranceTweenRef = useRef(null);
+    const itemEntranceTweenRef = useRef<any>(null);
 
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
@@ -83,7 +83,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
             const textInner = textInnerRef.current;
             if (!panel || !plusH || !plusV || !icon || !textInner) return;
 
-            let preLayers = [];
+            let preLayers: Element[] = [];
             if (preContainer) {
                 preLayers = Array.from(preContainer.querySelectorAll('.sm-prelayer'));
             }
@@ -260,7 +260,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         });
     }, [position]);
 
-    const animateIcon = useCallback(opening => {
+    const animateIcon = useCallback((opening: boolean) => {
         const icon = iconRef.current;
         if (!icon) return;
         spinTweenRef.current?.kill();
@@ -272,7 +272,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     }, []);
 
     const animateColor = useCallback(
-        opening => {
+        (opening: boolean) => {
             const btn = toggleBtnRef.current;
             if (!btn) return;
             colorTweenRef.current?.kill();
@@ -302,7 +302,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         }
     }, [changeMenuColorOnOpen, menuButtonColor, openMenuButtonColor]);
 
-    const animateText = useCallback(opening => {
+    const animateText = useCallback((opening: boolean) => {
         const inner = textInnerRef.current;
         if (!inner) return;
         textCycleAnimRef.current?.kill();
